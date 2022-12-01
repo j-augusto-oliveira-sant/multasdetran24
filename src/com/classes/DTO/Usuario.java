@@ -54,7 +54,8 @@ public class Usuario {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Usuario{");
-        sb.append("nome='").append(nome).append('\'');
+        sb.append("user_id=").append(id);
+        sb.append(", nome='").append(nome).append('\'');
         sb.append(", senha='").append(senha).append('\'');
         sb.append(", admin=").append(admin);
         sb.append('}');
