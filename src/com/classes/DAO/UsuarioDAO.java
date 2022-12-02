@@ -145,8 +145,8 @@ public class UsuarioDAO {
                 return true;
             }
         } catch (Exception e) {
-            //System.err.println("Erro: " + e.toString());
-            //e.printStackTrace();
+            System.err.println("Erro: " + e);
+            e.printStackTrace();
             return false;
         }
         return false;
@@ -167,7 +167,7 @@ public class UsuarioDAO {
         }
     }
 
-    public List<Usuario> montarLista(ResultSet rs) {
+    private List<Usuario> montarLista(ResultSet rs) {
         List<Usuario> listObj = new ArrayList<Usuario>();
         try {
             while (rs.next()) {
