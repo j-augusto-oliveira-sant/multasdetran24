@@ -20,9 +20,14 @@ public class UsuarioBO {
         return usuarioDAO.excluir(usuario);
     }
 
-    public Usuario procurarPorId(Usuario usuario) {
+    public Usuario procurarPorId(int id) {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        return usuarioDAO.procurarPorId(usuario);
+        return usuarioDAO.procurarPorId(id);
+    }
+
+    public Usuario procurarPorNome(String nome){
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        return usuarioDAO.procurarPorNome(nome);
     }
 
     public boolean existe(Usuario usuario) {

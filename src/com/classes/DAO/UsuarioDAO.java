@@ -70,13 +70,43 @@ public class UsuarioDAO {
         }
     }
 
-    public Usuario procurarPorId(Usuario usuario) {
+    public Usuario procurarPorId(int id) {
         try {
             Connection conn = ConectorMySQL.conectar();
             String sql = "SELECT * FROM " + NOMEDATABELA + " WHERE user_id = ?;";
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, usuario.getId());
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Usuario obj = new Usuario();
+                obj.setId(rs.getInt(1));
+                obj.setNome(rs.getString(2));
+                obj.setSenha(rs.getString(3));
+                obj.setAdmin(rs.getBoolean(4));
+                ps.close();
+                rs.close();
+                conn.close();
+                return obj;
+            } else {
+                ps.close();
+                rs.close();
+                conn.close();
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Usuario procurarPorNome(String nome) {
+        try {
+            Connection conn = ConectorMySQL.conectar();
+            String sql = "SELECT * FROM " + NOMEDATABELA + " WHERE nome = ?;";
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nome);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Usuario obj = new Usuario();
@@ -103,10 +133,10 @@ public class UsuarioDAO {
     public boolean existe(Usuario usuario) {
         try {
             Connection conn = ConectorMySQL.conectar();
-            String sql = "SELECT * FROM " + NOMEDATABELA + " WHERE user_id = ?;";
+            String sql = "SELECT * FROM " + NOMEDATABELA + " WHERE nome = ?;";
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, usuario.getId());
+            ps.setString(1, usuario.getNome());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 ps.close();
@@ -126,6 +156,7 @@ public class UsuarioDAO {
         try {
             Connection conn = ConectorMySQL.conectar();
             String sql = "SELECT * FROM " + NOMEDATABELA + ";";
+            assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return montarLista(rs);

@@ -17,6 +17,11 @@ public class Usuario {
         setNome(nome);
         setSenha(senha);
     }
+    public Usuario(String nome, String senha, boolean admin){
+        setNome(nome);
+        setSenha(senha);
+        setAdmin(admin);
+    }
     public Usuario(){}
 
     public int getId() {
