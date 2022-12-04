@@ -18,11 +18,10 @@ public class PerfilDAO {
     public boolean inserir(Perfil perfil) {
         try {
             Connection conn = ConectorMySQL.conectar();
-            String sql = "INSERT INTO " + NOMEDATABELA + " (user_id,cnh_id) VALUES (?,?);";
+            String sql = "INSERT INTO " + NOMEDATABELA + " (user_id) VALUES (?);";
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, perfil.getUser_id());
-            ps.setInt(2, perfil.getCnh_id());
             //ID AUTO_INCREMENT
             ps.executeUpdate();
             ps.close();
@@ -51,6 +50,34 @@ public class PerfilDAO {
         }
     }
 
+    public Perfil procurarPorUsuarioID(Usuario usuario){
+        try {
+            Connection conn = ConectorMySQL.conectar();
+            String sql = "SELECT * FROM " + NOMEDATABELA + " WHERE user_id = ?;";
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, usuario.getId());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Perfil obj = new Perfil();
+                obj.setId(rs.getInt(1));
+                obj.setUser_id(rs.getInt(2));
+                ps.close();
+                rs.close();
+                conn.close();
+                return obj;
+            } else {
+                ps.close();
+                rs.close();
+                conn.close();
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public Perfil procurarPorId(Perfil perfil) {
         try {
             Connection conn = ConectorMySQL.conectar();
@@ -63,7 +90,6 @@ public class PerfilDAO {
                 Perfil obj = new Perfil();
                 obj.setId(rs.getInt(1));
                 obj.setUser_id(rs.getInt(2));
-                obj.setCnh_id(rs.getInt(3));
                 ps.close();
                 rs.close();
                 conn.close();
