@@ -18,6 +18,11 @@ public class CRLVBO {
         return crlvdao.alterar(veiculo);
     }
 
+    public CRLV procurarPorId(CRLV veiculo) {
+        CRLVDAO crlvdao = new CRLVDAO();
+        return crlvdao.procurarPorId(veiculo);
+    }
+
     public boolean excluir(CRLV veiculo) {
         CRLVDAO crlvdao = new CRLVDAO();
         return crlvdao.excluir(veiculo);

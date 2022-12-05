@@ -108,4 +108,21 @@ public class CNH {
     public void setPerfil_id(int perfil_id) {
         this.perfil_id = perfil_id;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CNH{");
+        sb.append("cnh_id=").append(cnh_id);
+        sb.append(", perfil_id=").append(perfil_id);
+        sb.append(", pontuacao=").append(pontuacao);
+        sb.append(", tipo_carteira='").append(tipo_carteira).append('\'');
+        sb.append(", cpf='").append(cpf).append('\'');
+        sb.append(", data_1_habilitacao=").append(data_1_habilitacao);
+        sb.append(", emissao=").append(emissao);
+        sb.append(", validade=").append(validade);
+        sb.append(", identidade='").append(identidade).append('\'');
+        sb.append(", nacionalidade='").append(nacionalidade).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

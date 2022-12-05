@@ -45,20 +45,33 @@ public class CNHDAO {
         try {
             Connection conn = ConectorMySQL.conectar();
             String sql = "UPDATE " + NOMEDATABELA + " SET "
-                    +"perfil_id = ? pontuacao = ? tipo_carteira = ? cpf = ? data_1_habilitacao = ? emissao = ? "
-                    + "validade = ? identidade = ? nacionalidade = ? WHERE cnh_id = ?";
+                    +"tipo_carteira = ?, emissao = ?, "
+                    + "validade = ?, nacionalidade = ? WHERE cnh_id = ?";
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, cnh.getPerfil_id());
-            ps.setInt(2, cnh.getPontuacao());
-            ps.setString(3,cnh.getTipo_carteira());
-            ps.setString(4,cnh.getCpf());
-            ps.setDate(5,new java.sql.Date(cnh.getData_1_habilitacao().getTime()));
-            ps.setDate(6, new java.sql.Date(cnh.getEmissao().getTime()));
-            ps.setDate(7, new java.sql.Date(cnh.getValidade().getTime()));
-            ps.setString(8, cnh.getIdentidade());
-            ps.setString(9, cnh.getNacionalidade());
-            ps.setInt(10, cnh.getCnh_id());
+            ps.setString(1,cnh.getTipo_carteira());
+            ps.setDate(2, new java.sql.Date(cnh.getEmissao().getTime()));
+            ps.setDate(3, new java.sql.Date(cnh.getValidade().getTime()));
+            ps.setString(4, cnh.getNacionalidade());
+            ps.setInt(5, cnh.getCnh_id());
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean alterarPontuacao(CNH cnh) {
+        try {
+            Connection conn = ConectorMySQL.conectar();
+            String sql = "UPDATE " + NOMEDATABELA + " SET pontuacao = ? WHERE cnh_id = ?";
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, cnh.getPontuacao());
+            ps.setInt(2, cnh.getCnh_id());
             ps.executeUpdate();
             ps.close();
             conn.close();

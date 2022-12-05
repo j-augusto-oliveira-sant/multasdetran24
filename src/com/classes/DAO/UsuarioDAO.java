@@ -36,13 +36,12 @@ public class UsuarioDAO {
     public boolean alterar(Usuario usuario) {
         try {
             Connection conn = ConectorMySQL.conectar();
-            String sql = "UPDATE " + NOMEDATABELA + " SET nome = ? senha = ? admin = ? WHERE user_id = ?;";
+            String sql = "UPDATE " + NOMEDATABELA + " SET senha = ?, admin = ? WHERE user_id = ?;";
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, usuario.getNome());
-            ps.setString(2,usuario.getSenha());
-            ps.setBoolean(3,usuario.isAdmin());
-            ps.setInt(4, usuario.getId());
+            ps.setString(1,usuario.getSenha());
+            ps.setBoolean(2,usuario.isAdmin());
+            ps.setInt(3, usuario.getId());
             ps.executeUpdate();
             ps.close();
             conn.close();

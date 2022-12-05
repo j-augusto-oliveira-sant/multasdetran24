@@ -15,6 +15,11 @@ public class CNHBO {
         return cnhdao.alterar(cnh);
     }
 
+    public boolean alterarPontuacao(CNH cnh) {
+        CNHDAO cnhdao = new CNHDAO();
+        return cnhdao.alterarPontuacao(cnh);
+    }
+
     public CNH procurarPorPerfilId(Perfil perfil) {
         CNHDAO cnhdao = new CNHDAO();
         return cnhdao.procurarPorPerfilId(perfil);

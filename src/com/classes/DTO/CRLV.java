@@ -2,15 +2,27 @@ package com.classes.DTO;
 import java.util.Date;
 
 public class CRLV {
-    int crlv_id;
-    int perfil_id;//FOREIGN KEY
-    String tipo;
-    String cor_predominante;
-    String categoria;
-    String modelo;
-    Date data_documento;
-    Date ano_fabricacao;
-    Date ano_modificacao;
+    private int crlv_id;
+    private int perfil_id;//FOREIGN KEY
+    private String tipo;
+    private String cor_predominante;
+    private String categoria;
+    private String modelo;
+    private Date data_documento;
+    private Date ano_fabricacao;
+    private Date ano_modificacao;
+
+    public CRLV(int perfil_id, String tipo, String cor_predominante,
+                String categoria, String modelo, Date data_documento, Date ano_fabricacao, Date ano_modificacao) {
+        setPerfil_id(perfil_id);
+        setTipo(tipo);
+        setCor_predominante(cor_predominante);
+        setCategoria(categoria);
+        setModelo(modelo);
+        setData_documento(data_documento);
+        setAno_fabricacao(ano_fabricacao);
+        setAno_modificacao(ano_modificacao);
+    }
 
     public CRLV(){}
 
