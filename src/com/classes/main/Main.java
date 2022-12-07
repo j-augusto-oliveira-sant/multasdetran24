@@ -5,7 +5,9 @@ import com.classes.DTO.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Scanner;
+import java.util.Date;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -119,7 +121,7 @@ public class Main {
         scan.close();
     }
 
-    public static void adminMenu(String username, Scanner scan){
+    public static void adminMenu(String username, Scanner scan) {
         int escolha = -1;
         UsuarioBO usuarioBO = new UsuarioBO();
         Usuario usuario_logado = usuarioBO.procurarPorNome(username);
@@ -141,7 +143,7 @@ public class Main {
         } while (escolha != 0);
     }
 
-    public static void buscarPerfilAdmin(Usuario usuario_logado,Scanner scan){
+    public static void buscarPerfilAdmin(Usuario usuario_logado, Scanner scan) {
         PerfilBO perfilBO = new PerfilBO();
         UsuarioBO usuarioBO = new UsuarioBO();
         CNHBO cnhbo = new CNHBO();
@@ -154,7 +156,7 @@ public class Main {
         System.out.print(">: ");
         int escolha = scan.nextInt();
         scan.nextLine();
-        if (escolha==2) {
+        if (escolha == 2) {
             System.out.print("Usuario ID: ");
             int id_searched = scan.nextInt();
             scan.nextLine();
@@ -168,10 +170,10 @@ public class Main {
             System.out.print(">: ");
             int escolha_2 = scan.nextInt();
             scan.nextLine();
-            if (escolha_2==2){
+            if (escolha_2 == 2) {
                 alterarPontuacao(cnh_searched, scan);
             }
-        } else if (escolha==3){
+        } else if (escolha == 3) {
             System.out.print("Buscar por Nome: ");
             String username_searched = scan.nextLine();
             Usuario usuario_searched = usuarioBO.procurarPorNome(username_searched);
@@ -184,14 +186,14 @@ public class Main {
             System.out.print(">: ");
             int escolha_2 = scan.nextInt();
             scan.nextLine();
-            if (escolha_2==2){
+            if (escolha_2 == 2) {
                 alterarPontuacao(cnh_searched, scan);
             }
         }
 
     }
 
-    public static void alterarPontuacao(CNH cnh_searched, Scanner scan){
+    public static void alterarPontuacao(CNH cnh_searched, Scanner scan) {
         CNHBO cnhbo = new CNHBO();
         System.out.println("---ALTERAR PONTUACAO---");
         System.out.println("-----------------------------");
@@ -202,17 +204,17 @@ public class Main {
         System.out.print(">: ");
         int escolha = scan.nextInt();
         scan.nextLine();
-        if (escolha==2){
+        if (escolha == 2) {
             System.out.print("Pontos para adicionar: ");
             int pontos = scan.nextInt();
             scan.nextLine();
-            cnh_searched.setPontuacao((pontos+cnh_searched.getPontuacao()));
+            cnh_searched.setPontuacao((pontos + cnh_searched.getPontuacao()));
             cnhbo.alterarPontuacao(cnh_searched);
-        } else if (escolha == 3){
+        } else if (escolha == 3) {
             System.out.print("Pontos para subtrair: ");
             int pontos = scan.nextInt();
             scan.nextLine();
-            cnh_searched.setPontuacao((cnh_searched.getPontuacao()-pontos));
+            cnh_searched.setPontuacao((cnh_searched.getPontuacao() - pontos));
             cnhbo.alterarPontuacao(cnh_searched);
         }
     }
@@ -395,7 +397,11 @@ public class Main {
         MultaBO multaBO = new MultaBO();
         System.out.println("---Multas---");
         System.out.println("1.Voltar para o menu principal");
-        System.out.println("2.Pesquisar Multa");
+        System.out.println("2.Pesquisar id Multa");
+        System.out.println("3.Multas leve");
+        System.out.println("4.Multas media");
+        System.out.println("5.Multas grave");
+        System.out.println("6.Multas gravissima");
         System.out.print(">: ");
         int escolha = scan.nextInt();
         if (escolha == 2) {
@@ -406,6 +412,66 @@ public class Main {
             multa_to_search.setMulta_id(id_multa_searched);
             Multa multa_searched = multaBO.procurarPorId(multa_to_search);
             System.out.println(multa_searched);
+        } else if (escolha == 3) {
+            System.out.println("---MULTAS LEVE---");
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            System.out.println(mostrarMultasPesquisadas(multas_searched));
+        } else if (escolha == 4) {
+            System.out.println("---MULTAS MEDIA---");
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            System.out.println(mostrarMultasPesquisadas(multas_searched));
+        } else if (escolha == 5) {
+            System.out.println("---MULTAS GRAVE---");
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            System.out.println(mostrarMultasPesquisadas(multas_searched));
+        } else if (escolha == 6) {
+            System.out.println("---MULTAS GRAVISSIMA---");
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            System.out.println(mostrarMultasPesquisadas(multas_searched));
+        }
+    }
+
+    public static String mostrarMultasPesquisadas(List<Multa> multas_searched) {
+        StringBuilder sb = new StringBuilder();
+        for (Multa multa : multas_searched) {
+            String tipo = "";
+            if (multa.getTipo_multa() == 1){
+                tipo = "Leve";
+            } else if (multa.getTipo_multa() == 2){
+                tipo = "Media";
+            }   else if (multa.getTipo_multa() == 3){
+                tipo = "Grave";
+            }   else if (multa.getTipo_multa() == 4) {
+                tipo = "Gravissima";
+            }
+            sb.append("ID: ").append(multa.getMulta_id()).append("\n");
+            sb.append("CODIGO: ").append(multa.getCodigo()).append("\n");
+            sb.append("DESCRICAO: ").append(multa.getDescricao()).append("\n");
+            sb.append("GRAVIDADE: ").append(tipo).append("\n");
+            sb.append("PONTOS: ").append(multa.getPontos()).append("\n");
+            sb.append("VALOR: R$").append(multa.getValor()).append("\n");
+            sb.append("BASE LEGAL: ").append(multa.getBase_legal());
+            sb.append("--------------").append("\n");
+        }
+        return sb.toString();
+    }
+
+    public static void ClearConsole(){
+        try{
+            String operatingSystem = System.getProperty("os.name");//Check the current operating system
+
+            if(operatingSystem.contains("Windows")){
+                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
+                Process startProcess = pb.inheritIO().start();
+                startProcess.waitFor();
+            } else {
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                Process startProcess = pb.inheritIO().start();
+
+                startProcess.waitFor();
+            }
+        }catch(Exception e){
+            System.out.println(e);
         }
     }
 

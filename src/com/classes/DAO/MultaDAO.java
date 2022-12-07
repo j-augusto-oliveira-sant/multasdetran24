@@ -7,6 +7,8 @@ import com.classes.conexao.ConectorMySQL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultaDAO {
 
@@ -56,6 +58,49 @@ public class MultaDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     *
+     * @param tipo_multa gravidades: 4 gravissima,3 grave,2 media,1 leve
+     * @return
+     */
+    public List<Multa> procurarMultasPorTipo(int tipo_multa){
+        try {
+            Connection conn = ConectorMySQL.conectar();
+            String sql = "SELECT * FROM multa WHERE tipo_multa = ?;";
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, tipo_multa);
+            ResultSet rs = ps.executeQuery();
+            return montarLista(rs);
+        } catch (Exception e) {
+            //System.err.println("Erro: " + e.toString());
+            //e.printStackTrace();
+            return null;
+        }
+    }
+
+    private List<Multa> montarLista(ResultSet rs) {
+        List<Multa> listObj = new ArrayList<Multa>();
+        try {
+            while (rs.next()) {
+                Multa obj = new Multa();
+                obj.setMulta_id(rs.getInt(1));
+                obj.setCodigo(rs.getString(2));
+                obj.setDescricao(rs.getString(3));
+                obj.setTipo_multa(rs.getInt(4));
+                obj.setPontos(rs.getInt(5));
+                obj.setValor(rs.getDouble(6));
+                obj.setBase_legal(rs.getString(7));
+                listObj.add(obj);
+            }
+            return listObj;
+        } catch (Exception e) {
+            System.err.println("Erro: " + e);
+            e.printStackTrace();
+            return null;
         }
     }
 
