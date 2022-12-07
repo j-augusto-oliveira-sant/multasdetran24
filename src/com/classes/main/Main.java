@@ -9,35 +9,30 @@ import java.util.Scanner;
 import java.util.Date;
 import java.util.List;
 
+import static com.classes.main.FerramentaTerminal.*;
+
 public class Main {
     public static void main(String[] args) throws Exception {
-        //Console console = System.console();
         Scanner scan = new Scanner(System.in);
-        //      //Nao funciona no console de IDE
-//        char[] senha = console.readPassword();
-//        StringBuilder sb_senha = new StringBuilder();
-//        for (char letra: senha)
-//            sb_senha.append(letra);
-//        String s_senha = sb_senha.toString();
-//        //
+
 
         boolean entrou = false;
         while (!entrou) {
             System.out.println("------------");
-            System.out.println("0.Sair");
+            System.out.println(colorir_texto("0.Sair"));
             System.out.println("1.Logar");
             System.out.println("2.Registrar");
             System.out.println("------------");
             System.out.print(">: ");
             int choice = scan.nextInt();
-            String username = "";
+            String username;
             if (choice == 1) {
                 System.out.println("---LOGAR---");
                 scan.nextLine();
                 System.out.print("Nome: ");
                 username = scan.nextLine();
                 System.out.print("Senha: ");
-                String pass = scan.nextLine();
+                String pass = lerSenha();
                 UsuarioBO usuarioBO = new UsuarioBO();
                 Usuario usuario_pesquisado = usuarioBO.procurarPorNome(username);
                 String enc_pass = SenhaCrypt.encryptPassword(pass);
@@ -64,7 +59,8 @@ public class Main {
                 System.out.print("Novo nome: ");
                 username = scan.nextLine();
                 System.out.print("Nova senha: ");
-                String pass = SenhaCrypt.encryptPassword(scan.nextLine());
+                String pass = lerSenha();
+                pass = SenhaCrypt.encryptPassword(pass);
                 UsuarioBO usuarioBo = new UsuarioBO();
 
                 boolean is_admin = false;
@@ -122,6 +118,7 @@ public class Main {
     }
 
     public static void adminMenu(String username, Scanner scan) {
+        clearConsole();
         int escolha = -1;
         UsuarioBO usuarioBO = new UsuarioBO();
         Usuario usuario_logado = usuarioBO.procurarPorNome(username);
@@ -144,6 +141,7 @@ public class Main {
     }
 
     public static void buscarPerfilAdmin(Usuario usuario_logado, Scanner scan) {
+        clearConsole();
         PerfilBO perfilBO = new PerfilBO();
         UsuarioBO usuarioBO = new UsuarioBO();
         CNHBO cnhbo = new CNHBO();
@@ -194,6 +192,7 @@ public class Main {
     }
 
     public static void alterarPontuacao(CNH cnh_searched, Scanner scan) {
+        clearConsole();
         CNHBO cnhbo = new CNHBO();
         System.out.println("---ALTERAR PONTUACAO---");
         System.out.println("-----------------------------");
@@ -224,9 +223,8 @@ public class Main {
         UsuarioBO usuarioBO = new UsuarioBO();
         Usuario usuario_logado = usuarioBO.procurarPorNome(username);
         do {
-            System.out.println("######################");
-            System.out.println("Bem vindo " + usuario_logado.getNome() + "! |ID:" + usuario_logado.getId());
-            System.out.println("######################");
+            clearConsole();
+            System.out.println(colorir_texto("Bem vindo " + usuario_logado.getNome() + "! |ID:" + usuario_logado.getId()));
             System.out.println("-----------------------------");
             System.out.println("0.Sair");
             System.out.println("1.Visualisar Perfil");
@@ -268,13 +266,16 @@ public class Main {
     }
 
     public static void escolhaPerfil(Usuario usuario_logado, Scanner scan) {
+        clearConsole();
         System.out.println("---Perfil---");
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
-        System.out.println(perfil);
+        System.out.println("USUARIO: "+usuario_logado.getNome());
+        System.out.println("É administrador: "+usuario_logado.isAdmin());
     }
 
     public static void escolhaCNH(Usuario usuario_logado, Scanner scan) {
+        clearConsole();
         System.out.println("---CNH---");
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
@@ -291,7 +292,7 @@ public class Main {
         System.out.println("Data Primeira Habilitacao: " + cnh.getData_1_habilitacao());
         System.out.println("Emissao: " + cnh.getEmissao());
         System.out.println("Validade: " + cnh.getValidade());
-        System.out.println("1.Voltar para o menu principal");
+        System.out.println(colorir_texto("1.Voltar ao menu principal"));
         System.out.println("2.Alterar CNH");
         System.out.print(">: ");
         int escolha = scan.nextInt();
@@ -319,6 +320,7 @@ public class Main {
     }
 
     public static void escolhaVeiculos(Usuario usuario_logado, Scanner scan) {
+        clearConsole();
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
         List<CRLV> veiculos = perfilBO.procurarVeiculos(perfil);
@@ -338,7 +340,7 @@ public class Main {
             System.out.println("Categoria: " + veiculo.getCategoria());
             System.out.println("--------------");
         }
-        System.out.println("1.Voltar para o menu principal");
+        System.out.println(colorir_texto("1.Voltar ao menu principal"));
         System.out.println("2.Alterar Veiculo");
         System.out.println("3.Adicionar Novo Veiculo");
         System.out.println("4.Remover Veiculo");
@@ -394,9 +396,10 @@ public class Main {
     }
 
     public static void escolhaMultas(Usuario usuario_logado, Scanner scan) {
+        clearConsole();
         MultaBO multaBO = new MultaBO();
         System.out.println("---Multas---");
-        System.out.println("1.Voltar para o menu principal");
+        System.out.println(colorir_texto("1.Voltar ao menu principal"));
         System.out.println("2.Pesquisar id Multa");
         System.out.println("3.Multas leve");
         System.out.println("4.Multas media");
@@ -404,6 +407,7 @@ public class Main {
         System.out.println("6.Multas gravissima");
         System.out.print(">: ");
         int escolha = scan.nextInt();
+        scan.nextLine();
         if (escolha == 2) {
             System.out.println("---PESQUISAR MULTA---");
             Multa multa_to_search = new Multa();
@@ -418,30 +422,32 @@ public class Main {
             System.out.println(mostrarMultasPesquisadas(multas_searched));
         } else if (escolha == 4) {
             System.out.println("---MULTAS MEDIA---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(2);
             System.out.println(mostrarMultasPesquisadas(multas_searched));
         } else if (escolha == 5) {
             System.out.println("---MULTAS GRAVE---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(3);
             System.out.println(mostrarMultasPesquisadas(multas_searched));
         } else if (escolha == 6) {
             System.out.println("---MULTAS GRAVISSIMA---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(4);
             System.out.println(mostrarMultasPesquisadas(multas_searched));
         }
+        System.out.print(":");
+        scan.nextLine();
     }
 
     public static String mostrarMultasPesquisadas(List<Multa> multas_searched) {
         StringBuilder sb = new StringBuilder();
         for (Multa multa : multas_searched) {
             String tipo = "";
-            if (multa.getTipo_multa() == 1){
+            if (multa.getTipo_multa() == 1) {
                 tipo = "Leve";
-            } else if (multa.getTipo_multa() == 2){
+            } else if (multa.getTipo_multa() == 2) {
                 tipo = "Media";
-            }   else if (multa.getTipo_multa() == 3){
+            } else if (multa.getTipo_multa() == 3) {
                 tipo = "Grave";
-            }   else if (multa.getTipo_multa() == 4) {
+            } else if (multa.getTipo_multa() == 4) {
                 tipo = "Gravissima";
             }
             sb.append("ID: ").append(multa.getMulta_id()).append("\n");
@@ -454,40 +460,5 @@ public class Main {
             sb.append("--------------").append("\n");
         }
         return sb.toString();
-    }
-
-    public static void ClearConsole(){
-        try{
-            String operatingSystem = System.getProperty("os.name");//Check the current operating system
-
-            if(operatingSystem.contains("Windows")){
-                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
-                Process startProcess = pb.inheritIO().start();
-                startProcess.waitFor();
-            } else {
-                ProcessBuilder pb = new ProcessBuilder("clear");
-                Process startProcess = pb.inheritIO().start();
-
-                startProcess.waitFor();
-            }
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }
-
-    public static Date transformar_data(String sData) {
-        String regex_date = "^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-([12][0-9]{3})$";
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        sdf.setLenient(false);
-        if (sData.matches(regex_date)) {
-            Date data_convert = null;
-            try {
-                data_convert = sdf.parse(sData);
-                return data_convert;
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }
