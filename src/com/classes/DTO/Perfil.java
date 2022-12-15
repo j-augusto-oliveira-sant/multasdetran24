@@ -1,5 +1,8 @@
 package com.classes.DTO;
 
+import com.classes.BO.PerfilBO;
+import java.util.List;
+
 public class Perfil {
     private int id;
     private int user_id;
@@ -24,6 +27,11 @@ public class Perfil {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public List<CRLV> montarVeiculos(){
+        PerfilBO perfilBO = new PerfilBO();
+        return perfilBO.procurarVeiculos(this);
     }
 
     @Override

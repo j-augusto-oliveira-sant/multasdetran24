@@ -36,9 +36,9 @@ public class FerramentaTerminal {
     }
 
     public static String colorir_texto(String texto){
-        String ANSI_YELLOW = "\u001B[33m";
+        String ANSI_GREEN = "\u001B[32m";
         String ANSI_RESET = "\u001B[0m";
-        return ANSI_YELLOW+texto+ANSI_RESET;
+        return ANSI_GREEN+texto+ANSI_RESET;
     }
 
     public static Date transformar_data(String sData) {

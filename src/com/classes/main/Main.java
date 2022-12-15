@@ -3,8 +3,6 @@ package com.classes.main;
 import com.classes.BO.*;
 import com.classes.DTO.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +13,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner scan = new Scanner(System.in);
 
-
+        clearConsole();
+        //Comeca
         boolean entrou = false;
         while (!entrou) {
             System.out.println("------------");
@@ -27,6 +26,7 @@ public class Main {
             int choice = scan.nextInt();
             String username;
             if (choice == 1) {
+                clearConsole();
                 System.out.println("---LOGAR---");
                 scan.nextLine();
                 System.out.print("Nome: ");
@@ -51,6 +51,7 @@ public class Main {
                 }
 
             } else if (choice == 2) {
+                clearConsole();
                 System.out.println("---REGISTRAR---");
                 scan.nextLine();
                 System.out.print("Registrar 1.admin 2.usuario: ");
@@ -123,9 +124,7 @@ public class Main {
         UsuarioBO usuarioBO = new UsuarioBO();
         Usuario usuario_logado = usuarioBO.procurarPorNome(username);
         do {
-            System.out.println("######################");
-            System.out.println("ADMINISTRADOR: " + usuario_logado.getNome() + " |ID:" + usuario_logado.getId());
-            System.out.println("######################");
+            System.out.println(colorir_texto("ADMINISTRADOR: " + usuario_logado.getNome() + " |ID:" + usuario_logado.getId()));
             System.out.println("-----------------------------");
             System.out.println("0.Sair");
             System.out.println("1.Buscar Perfil");
@@ -135,7 +134,7 @@ public class Main {
             scan.nextLine();
             switch (escolha) {
                 case 1 -> buscarPerfilAdmin(usuario_logado, scan);
-                case 2 -> escolhaCNH(usuario_logado, scan);
+                case 2 -> escolhaMultas(usuario_logado, scan);
             }
         } while (escolha != 0);
     }
@@ -267,11 +266,15 @@ public class Main {
 
     public static void escolhaPerfil(Usuario usuario_logado, Scanner scan) {
         clearConsole();
+        scan.nextLine();
         System.out.println("---Perfil---");
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
-        System.out.println("USUARIO: "+usuario_logado.getNome());
-        System.out.println("É administrador: "+usuario_logado.isAdmin());
+        System.out.println("USUARIO: " + colorir_texto(usuario_logado.getNome()));
+        System.out.println("Usuario Ativo");
+        System.out.println("É administrador: " + usuario_logado.isAdmin());
+        System.out.print(":");
+        scan.nextLine();
     }
 
     public static void escolhaCNH(Usuario usuario_logado, Scanner scan) {
@@ -292,6 +295,7 @@ public class Main {
         System.out.println("Data Primeira Habilitacao: " + cnh.getData_1_habilitacao());
         System.out.println("Emissao: " + cnh.getEmissao());
         System.out.println("Validade: " + cnh.getValidade());
+        System.out.println("---------");
         System.out.println(colorir_texto("1.Voltar ao menu principal"));
         System.out.println("2.Alterar CNH");
         System.out.print(">: ");
@@ -323,7 +327,7 @@ public class Main {
         clearConsole();
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
-        List<CRLV> veiculos = perfilBO.procurarVeiculos(perfil);
+        List<CRLV> veiculos = perfil.montarVeiculos();
         CRLVBO crlvbo = new CRLVBO();
         System.out.println("---Veiculos---");
         for (CRLV veiculo : veiculos) {
@@ -396,45 +400,50 @@ public class Main {
     }
 
     public static void escolhaMultas(Usuario usuario_logado, Scanner scan) {
-        clearConsole();
         MultaBO multaBO = new MultaBO();
-        System.out.println("---Multas---");
-        System.out.println(colorir_texto("1.Voltar ao menu principal"));
-        System.out.println("2.Pesquisar id Multa");
-        System.out.println("3.Multas leve");
-        System.out.println("4.Multas media");
-        System.out.println("5.Multas grave");
-        System.out.println("6.Multas gravissima");
-        System.out.print(">: ");
-        int escolha = scan.nextInt();
-        scan.nextLine();
-        if (escolha == 2) {
-            System.out.println("---PESQUISAR MULTA---");
-            Multa multa_to_search = new Multa();
-            int id_multa_searched = scan.nextInt();
+        int escolha = -1;
+        while (escolha != 1) {
+            clearConsole();
+            System.out.println("---Multas---");
+            System.out.println(colorir_texto("1.Voltar ao menu principal"));
+            System.out.println("2.Pesquisar id Multa");
+            System.out.println("3.Multas leve");
+            System.out.println("4.Multas media");
+            System.out.println("5.Multas grave");
+            System.out.println("6.Multas gravissima");
+            System.out.print(">: ");
+            escolha = scan.nextInt();
             scan.nextLine();
-            multa_to_search.setMulta_id(id_multa_searched);
-            Multa multa_searched = multaBO.procurarPorId(multa_to_search);
-            System.out.println(multa_searched);
-        } else if (escolha == 3) {
-            System.out.println("---MULTAS LEVE---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
-            System.out.println(mostrarMultasPesquisadas(multas_searched));
-        } else if (escolha == 4) {
-            System.out.println("---MULTAS MEDIA---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(2);
-            System.out.println(mostrarMultasPesquisadas(multas_searched));
-        } else if (escolha == 5) {
-            System.out.println("---MULTAS GRAVE---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(3);
-            System.out.println(mostrarMultasPesquisadas(multas_searched));
-        } else if (escolha == 6) {
-            System.out.println("---MULTAS GRAVISSIMA---");
-            List<Multa> multas_searched = multaBO.procurarMultasPorTipo(4);
-            System.out.println(mostrarMultasPesquisadas(multas_searched));
+            if (escolha != 1) {
+                if (escolha == 2) {
+                    System.out.println("---PESQUISAR MULTA---");
+                    Multa multa_to_search = new Multa();
+                    int id_multa_searched = scan.nextInt();
+                    scan.nextLine();
+                    multa_to_search.setMulta_id(id_multa_searched);
+                    Multa multa_searched = multaBO.procurarPorId(multa_to_search);
+                    System.out.println(multa_searched);
+                } else if (escolha == 3) {
+                    System.out.println("---MULTAS LEVE---");
+                    List<Multa> multas_searched = multaBO.procurarMultasPorTipo(1);
+                    System.out.println(mostrarMultasPesquisadas(multas_searched));
+                } else if (escolha == 4) {
+                    System.out.println("---MULTAS MEDIA---");
+                    List<Multa> multas_searched = multaBO.procurarMultasPorTipo(2);
+                    System.out.println(mostrarMultasPesquisadas(multas_searched));
+                } else if (escolha == 5) {
+                    System.out.println("---MULTAS GRAVE---");
+                    List<Multa> multas_searched = multaBO.procurarMultasPorTipo(3);
+                    System.out.println(mostrarMultasPesquisadas(multas_searched));
+                } else if (escolha == 6) {
+                    System.out.println("---MULTAS GRAVISSIMA---");
+                    List<Multa> multas_searched = multaBO.procurarMultasPorTipo(4);
+                    System.out.println(mostrarMultasPesquisadas(multas_searched));
+                }
+                System.out.print(":");
+                scan.nextLine();
+            }
         }
-        System.out.print(":");
-        scan.nextLine();
     }
 
     public static String mostrarMultasPesquisadas(List<Multa> multas_searched) {
