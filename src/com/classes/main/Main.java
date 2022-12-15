@@ -124,6 +124,7 @@ public class Main {
         UsuarioBO usuarioBO = new UsuarioBO();
         Usuario usuario_logado = usuarioBO.procurarPorNome(username);
         do {
+            clearConsole();
             System.out.println(colorir_texto("ADMINISTRADOR: " + usuario_logado.getNome() + " |ID:" + usuario_logado.getId()));
             System.out.println("-----------------------------");
             System.out.println("0.Sair");
@@ -146,7 +147,7 @@ public class Main {
         CNHBO cnhbo = new CNHBO();
         System.out.println("---BUSCAR PERFIL---");
         System.out.println("-----------------------------");
-        System.out.println("1.Voltar menu principal");
+        System.out.println(colorir_texto("1.Voltar menu principal"));
         System.out.println("2.Buscar por ID");
         System.out.println("3.Buscar por nome");
         System.out.println("-----------------------------");
@@ -160,34 +161,36 @@ public class Main {
             Usuario usuario_searched = usuarioBO.procurarPorId(id_searched);
             Perfil perfil_searched = perfilBO.procurarPorUsuarioID(usuario_searched);
             CNH cnh_searched = cnhbo.procurarPorPerfilId(perfil_searched);
-            System.out.println(usuario_searched);
-            System.out.println(perfil_searched);
-            System.out.println(cnh_searched);
-            System.out.println("1.Voltar 2.Alterar Pontuacao");
-            System.out.print(">: ");
-            int escolha_2 = scan.nextInt();
-            scan.nextLine();
-            if (escolha_2 == 2) {
-                alterarPontuacao(cnh_searched, scan);
-            }
+            mudancasADMINperfil(usuario_searched, perfil_searched, cnh_searched, scan);
         } else if (escolha == 3) {
             System.out.print("Buscar por Nome: ");
             String username_searched = scan.nextLine();
             Usuario usuario_searched = usuarioBO.procurarPorNome(username_searched);
             Perfil perfil_searched = perfilBO.procurarPorUsuarioID(usuario_searched);
             CNH cnh_searched = cnhbo.procurarPorPerfilId(perfil_searched);
-            System.out.println(usuario_searched);
-            System.out.println(perfil_searched);
-            System.out.println(cnh_searched);
-            System.out.println("1.Voltar 2.Alterar Pontuacao");
-            System.out.print(">: ");
-            int escolha_2 = scan.nextInt();
-            scan.nextLine();
-            if (escolha_2 == 2) {
-                alterarPontuacao(cnh_searched, scan);
-            }
+            mudancasADMINperfil(usuario_searched, perfil_searched, cnh_searched, scan);
         }
+    }
 
+    public static void mudancasADMINperfil(Usuario usuario_searched, Perfil perfil_searched,
+                                           CNH cnh_searched, Scanner scan) {
+        CNHBO cnhbo = new CNHBO();
+        System.out.println(usuario_searched);
+        System.out.println(perfil_searched);
+        System.out.println(cnh_searched);
+        System.out.println("1.Voltar 2.Alterar Pontuacao 3.Suspender Carteira 4.Reativar Carteira");
+        System.out.print(">: ");
+        int escolha = scan.nextInt();
+        scan.nextLine();
+        if (escolha == 2) {
+            alterarPontuacao(cnh_searched, scan);
+        } else if (escolha == 3) {
+            cnh_searched.setAtiva(false);
+            cnhbo.alterarAtiva(cnh_searched);
+        } else if (escolha == 4){
+            cnh_searched.setAtiva(true);
+            cnhbo.alterarAtiva(cnh_searched);
+        }
     }
 
     public static void alterarPontuacao(CNH cnh_searched, Scanner scan) {
@@ -259,7 +262,7 @@ public class Main {
         PerfilBO perfilBO = new PerfilBO();
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario);
         CNH cnh = new CNH(perfil.getId(), pontuacao, tipo_carteira, cpf, data_1_habilitacao, emissao,
-                validade, identidade, nacionalidade);
+                validade, identidade, nacionalidade, true);
         CNHBO cnhbo = new CNHBO();
         cnhbo.inserir(cnh);
     }
@@ -284,42 +287,49 @@ public class Main {
         Perfil perfil = perfilBO.procurarPorUsuarioID(usuario_logado);
         CNHBO cnhbo = new CNHBO();
         CNH cnh = cnhbo.procurarPorPerfilId(perfil);
-        System.out.println("Usuario: " + usuario_logado.getNome());
-        System.out.println("---------");
-        System.out.println("Pontuacao: " + cnh.getPontuacao());
-        System.out.println("---------");
-        System.out.println("Identidade: " + cnh.getIdentidade());
-        System.out.println("CPF: " + cnh.getCpf());
-        System.out.println("Nacionalidade: " + cnh.getNacionalidade());
-        System.out.println("Tipo da Carteira: " + cnh.getTipo_carteira());
-        System.out.println("Data Primeira Habilitacao: " + cnh.getData_1_habilitacao());
-        System.out.println("Emissao: " + cnh.getEmissao());
-        System.out.println("Validade: " + cnh.getValidade());
-        System.out.println("---------");
-        System.out.println(colorir_texto("1.Voltar ao menu principal"));
-        System.out.println("2.Alterar CNH");
-        System.out.print(">: ");
-        int escolha = scan.nextInt();
-        scan.nextLine();
-        if (escolha == 2) {
-            System.out.println("---ALTERAR CNH---");
-            System.out.print("Tipo da carteira: ");
-            String tipo_carteira = scan.nextLine();
-            System.out.println("Data da emissao");
-            String sData = scan.nextLine().replace('/', '-');
-            Date emissao = transformar_data(sData);
-            System.out.println("Data da validade");
-            sData = scan.nextLine().replace('/', '-');
-            Date validade = transformar_data(sData);
-            System.out.println("Nacionalidade: ");
-            String nacionalidade = scan.nextLine();
-            CNH cnh_alterada = new CNH();
-            cnh_alterada.setCnh_id(cnh.getCnh_id());
-            cnh_alterada.setNacionalidade(nacionalidade);
-            cnh_alterada.setValidade(validade);
-            cnh_alterada.setEmissao(emissao);
-            cnh_alterada.setTipo_carteira(tipo_carteira);
-            cnhbo.alterar(cnh_alterada);
+        if (!cnh.isAtiva()) {
+            System.out.println(colorir_texto("SUA CNH FOI SUSPENSA"));
+            scan.nextLine();
+            System.out.print(":");
+            scan.nextLine();
+        } else {
+            System.out.println("Usuario: " + usuario_logado.getNome());
+            System.out.println("---------");
+            System.out.println("Pontuacao: " + cnh.getPontuacao());
+            System.out.println("---------");
+            System.out.println("Identidade: " + cnh.getIdentidade());
+            System.out.println("CPF: " + cnh.getCpf());
+            System.out.println("Nacionalidade: " + cnh.getNacionalidade());
+            System.out.println("Tipo da Carteira: " + cnh.getTipo_carteira());
+            System.out.println("Data Primeira Habilitacao: " + cnh.getData_1_habilitacao());
+            System.out.println("Emissao: " + cnh.getEmissao());
+            System.out.println("Validade: " + cnh.getValidade());
+            System.out.println("---------");
+            System.out.println(colorir_texto("1.Voltar ao menu principal"));
+            System.out.println("2.Alterar CNH");
+            System.out.print(">: ");
+            int escolha = scan.nextInt();
+            scan.nextLine();
+            if (escolha == 2) {
+                System.out.println("---ALTERAR CNH---");
+                System.out.print("Tipo da carteira: ");
+                String tipo_carteira = scan.nextLine();
+                System.out.println("Data da emissao");
+                String sData = scan.nextLine().replace('/', '-');
+                Date emissao = transformar_data(sData);
+                System.out.println("Data da validade");
+                sData = scan.nextLine().replace('/', '-');
+                Date validade = transformar_data(sData);
+                System.out.println("Nacionalidade: ");
+                String nacionalidade = scan.nextLine();
+                CNH cnh_alterada = new CNH();
+                cnh_alterada.setCnh_id(cnh.getCnh_id());
+                cnh_alterada.setNacionalidade(nacionalidade);
+                cnh_alterada.setValidade(validade);
+                cnh_alterada.setEmissao(emissao);
+                cnh_alterada.setTipo_carteira(tipo_carteira);
+                cnhbo.alterar(cnh_alterada);
+            }
         }
     }
 

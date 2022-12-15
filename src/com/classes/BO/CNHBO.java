@@ -15,6 +15,11 @@ public class CNHBO {
         return cnhdao.alterar(cnh);
     }
 
+    public boolean alterarAtiva(CNH cnh){
+        CNHDAO cnhdao = new CNHDAO();
+        return cnhdao.alterarAtiva(cnh);
+    }
+
     public boolean alterarPontuacao(CNH cnh) {
         CNHDAO cnhdao = new CNHDAO();
         return cnhdao.alterarPontuacao(cnh);

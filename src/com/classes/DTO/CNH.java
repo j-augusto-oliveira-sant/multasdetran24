@@ -14,8 +14,10 @@ public class CNH {
     private String identidade;
     private String nacionalidade;
 
+    private boolean ativa;
+
     public CNH(int perfil_id, int pontuacao, String tipo_carteira, String cpf,
-               Date data_1_habilitacao, Date emissao, Date validade, String identidade, String nacionalidade) {
+               Date data_1_habilitacao, Date emissao, Date validade, String identidade, String nacionalidade, boolean ativa) {
         setPerfil_id(perfil_id);
         setPontuacao(pontuacao);
         setTipo_carteira(tipo_carteira);
@@ -25,6 +27,7 @@ public class CNH {
         setValidade(validade);
         setIdentidade(identidade);
         setNacionalidade(nacionalidade);
+        setAtiva(ativa);
     }
 
     public CNH(){}
@@ -107,6 +110,14 @@ public class CNH {
 
     public void setPerfil_id(int perfil_id) {
         this.perfil_id = perfil_id;
+    }
+
+    public boolean isAtiva() {
+        return ativa;
+    }
+
+    public void setAtiva(boolean ativa) {
+        this.ativa = ativa;
     }
 
     @Override

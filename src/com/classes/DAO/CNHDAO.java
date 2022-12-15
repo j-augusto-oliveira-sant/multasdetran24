@@ -64,6 +64,24 @@ public class CNHDAO {
         }
     }
 
+    public boolean alterarAtiva(CNH cnh){
+        try {
+            Connection conn = ConectorMySQL.conectar();
+            String sql = "UPDATE " + NOMEDATABELA + " SET ativa = ? WHERE cnh_id = ?";
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setBoolean(1, cnh.isAtiva());
+            ps.setInt(2, cnh.getCnh_id());
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean alterarPontuacao(CNH cnh) {
         try {
             Connection conn = ConectorMySQL.conectar();
@@ -102,6 +120,7 @@ public class CNHDAO {
                 obj.setValidade(rs.getDate(8));
                 obj.setIdentidade(rs.getString(9));
                 obj.setNacionalidade(rs.getString(10));
+                obj.setAtiva(rs.getBoolean(11));
                 ps.close();
                 rs.close();
                 conn.close();
